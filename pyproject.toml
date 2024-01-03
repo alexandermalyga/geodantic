@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "geodantic"
+version = "0.0.0"
+description = "GeoJSON parsing and validation using Pydantic"
+authors = ["Alexander Malyga <alexander@malyga.io>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/alexandermalyga/geodantic"
+repository = "https://github.com/alexandermalyga/geodantic"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pydantic = "^2.5.3"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.8.0"
+black = "^23.12.1"
+isort = "^5.13.2"
+pytest = "^7.4.4"
+pytest-cov = "^4.1.0"
+
+[tool.mypy]
+strict = true
+
+[tool.black]
+target_version = ["py312"]
+
+[tool.isort]
+profile = "black"
+
+[tool.coverage.report]
+exclude_lines = ["pragma: not covered", "@overload"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
