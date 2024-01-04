@@ -41,3 +41,15 @@ def test_parse_line_string_with_multiple_positions() -> None:
     # then
     assert line_string.type is GeoJSONObjectType.LINE_STRING
     assert line_string.coordinates == [(1.0, 2.0), (3.0, 4.0)]
+
+
+def test_parse_line_string_with_invalid_position() -> None:
+    # given
+    data = {
+        "type": "LineString",
+        "coordinates": [[1, 2], [3, 91]],
+    }
+
+    with pytest.raises(pydantic.ValidationError):
+        # when
+        LineString(**data)

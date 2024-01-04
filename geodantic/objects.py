@@ -9,21 +9,19 @@ type Longitude = Annotated[float, at.Ge(-180), at.Le(180)]
 type Latitude = Annotated[float, at.Ge(-90), at.Le(90)]
 type Position = tuple[Longitude, Latitude] | tuple[Longitude, Latitude, float]
 type LineStringCoordinates = Annotated[list[Position], at.MinLen(2)]
-
+type BoundingBox2D = tuple[Longitude, Latitude, Longitude, Latitude]
+type BoundingBox3D = tuple[Longitude, Latitude, float, Longitude, Latitude, float]
 type BoundingBox = Annotated[
-    tuple[Longitude, Latitude, Longitude, Latitude]
-    | tuple[Longitude, Latitude, float, Longitude, Latitude, float],
+    BoundingBox2D | BoundingBox3D,
     at.Predicate(
         lambda b: (b[0], b[1]) <= ((b[2], b[3]) if len(b) == 4 else (b[3], b[4]))
     ),
 ]
-
 type LinearRing = Annotated[
     list[Position],
-    at.MinLen(4),  # TODO: Why isn't a triangle accepted (3 length)
+    at.MinLen(4),
     at.Predicate(lambda r: r[0] == r[-1]),
 ]
-
 type PolygonCoordinates = list[LinearRing]
 
 
@@ -87,8 +85,6 @@ class MultiLineString(Geometry):
 class Polygon(Geometry):
     type: Literal[GeoJSONObjectType.POLYGON]
     coordinates: PolygonCoordinates
-    # TODO: the first MUST be the exterior ring, and any others MUST be interior rings.
-    # TODO: exterior rings are counterclockwise, and holes are clockwise
 
 
 @dataclass(kw_only=True, slots=True)
@@ -98,9 +94,18 @@ class MultiPolygon(Geometry):
 
 
 @dataclass(kw_only=True, slots=True)
-class GeometryCollection(Geometry):
+class GeometryCollection[
+    GeometryT: Point
+    | MultiPoint
+    | LineString
+    | MultiLineString
+    | Polygon
+    | MultiPolygon
+](Geometry):
     type: Literal[GeoJSONObjectType.GEOMETRY_COLLECTION]
-    geometries: list[Geometry]
+
+    # TODO: Is there any way of defining a recursive generic class?
+    geometries: list[GeometryT | "GeometryCollection"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -118,13 +123,13 @@ class Feature[
 
     # TODO: How does this parse to the correct type without a discriminator field? Is performance
     # better with an explicit discriminator?
-    geometry: GeometryT  
+    geometry: GeometryT
 
-    # TODO: json lists allowed? use recursive json type?
-    properties: Mapping[str, Any] | None  # TODO: Default None?
+    # TODO: Accept pydantic models
+    properties: Mapping[str, Any] | None
 
     # TODO: Is null allowed here? Use sentinel value instead?
-    id: str | int | float | None = None
+    id: str | int | None = None
 
 
 @dataclass(kw_only=True, slots=True)
