@@ -8,7 +8,7 @@ from geodantic.base import GeoJSONObject, GeoJSONObjectType
 from geodantic.geometries import AnyGeometry
 
 
-@dataclass(kw_only=True, slots=True)
+@dataclass(frozen=True, kw_only=True, slots=True)
 class Feature[GeometryT: AnyGeometry | None](GeoJSONObject):
     type: Literal[GeoJSONObjectType.FEATURE]
     geometry: GeometryT
@@ -26,7 +26,7 @@ class Feature[GeometryT: AnyGeometry | None](GeoJSONObject):
         return value
 
 
-@dataclass(kw_only=True, slots=True)
+@dataclass(frozen=True, kw_only=True, slots=True)
 class FeatureCollection(GeoJSONObject):
     type: Literal[GeoJSONObjectType.FEATURE_COLLECTION]
     features: Sequence[Feature]

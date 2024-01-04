@@ -56,7 +56,7 @@ class GeoJSONObjectType(StrEnum):
     FEATURE_COLLECTION = "FeatureCollection"
 
 
-@dataclass(kw_only=True, slots=True)
+@dataclass(frozen=True, kw_only=True, slots=True)
 class GeoJSONObject(ABC):
     type: GeoJSONObjectType
     bbox: BoundingBox | None = None
