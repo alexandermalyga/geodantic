@@ -5,7 +5,7 @@ import pydantic
 from pydantic.dataclasses import dataclass
 
 from geodantic.base import GeoJSONObject, GeoJSONObjectType
-from geodantic.geometry import AnyGeometry
+from geodantic.geometries import AnyGeometry
 
 
 @dataclass(kw_only=True, slots=True)

@@ -17,8 +17,8 @@ from .base import (
     Position2D,
     Position3D,
 )
-from .feature import Feature, FeatureCollection
-from .geometry import (
+from .features import Feature, FeatureCollection
+from .geometries import (
     AnyGeometry,
     Geometry,
     GeometryCollection,
