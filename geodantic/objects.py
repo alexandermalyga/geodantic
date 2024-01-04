@@ -1,6 +1,7 @@
 from abc import ABC
+from collections.abc import Mapping, Sequence
 from enum import StrEnum
-from typing import Annotated, Any, Literal, Mapping
+from typing import Annotated, Any, Literal
 
 import annotated_types as at
 from pydantic.dataclasses import dataclass
@@ -8,7 +9,7 @@ from pydantic.dataclasses import dataclass
 type Longitude = Annotated[float, at.Ge(-180), at.Le(180)]
 type Latitude = Annotated[float, at.Ge(-90), at.Le(90)]
 type Position = tuple[Longitude, Latitude] | tuple[Longitude, Latitude, float]
-type LineStringCoordinates = Annotated[list[Position], at.MinLen(2)]
+type LineStringCoordinates = Annotated[Sequence[Position], at.MinLen(2)]
 type BoundingBox2D = tuple[Longitude, Latitude, Longitude, Latitude]
 type BoundingBox3D = tuple[Longitude, Latitude, float, Longitude, Latitude, float]
 type BoundingBox = Annotated[
@@ -18,11 +19,11 @@ type BoundingBox = Annotated[
     ),
 ]
 type LinearRing = Annotated[
-    list[Position],
+    Sequence[Position],
     at.MinLen(4),
     at.Predicate(lambda r: r[0] == r[-1]),
 ]
-type PolygonCoordinates = list[LinearRing]
+type PolygonCoordinates = Sequence[LinearRing]
 
 
 class GeoJSONObjectType(StrEnum):
@@ -66,7 +67,7 @@ class Point(Geometry):
 @dataclass(kw_only=True, slots=True)
 class MultiPoint(Geometry):
     type: Literal[GeoJSONObjectType.MULTI_POINT]
-    coordinates: list[Position]
+    coordinates: Sequence[Position]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -78,7 +79,7 @@ class LineString(Geometry):
 @dataclass(kw_only=True, slots=True)
 class MultiLineString(Geometry):
     type: Literal[GeoJSONObjectType.MULTI_LINE_STRING]
-    coordinates: list[LineStringCoordinates]
+    coordinates: Sequence[LineStringCoordinates]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -90,7 +91,7 @@ class Polygon(Geometry):
 @dataclass(kw_only=True, slots=True)
 class MultiPolygon(Geometry):
     type: Literal[GeoJSONObjectType.MULTI_POLYGON]
-    coordinates: list[PolygonCoordinates]
+    coordinates: Sequence[PolygonCoordinates]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -105,7 +106,7 @@ class GeometryCollection[
     type: Literal[GeoJSONObjectType.GEOMETRY_COLLECTION]
 
     # TODO: Is there any way of defining a recursive generic class?
-    geometries: list[GeometryT | "GeometryCollection"]
+    geometries: Sequence[GeometryT | "GeometryCollection"]
 
 
 @dataclass(kw_only=True, slots=True)
@@ -135,4 +136,4 @@ class Feature[
 @dataclass(kw_only=True, slots=True)
 class FeatureCollection(GeoJSONObject):
     type: Literal[GeoJSONObjectType.FEATURE_COLLECTION]
-    features: list[Feature]
+    features: Sequence[Feature]
