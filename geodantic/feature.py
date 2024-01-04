@@ -11,12 +11,9 @@ from geodantic.geometry import AnyGeometry
 @dataclass(kw_only=True, slots=True)
 class Feature[GeometryT: AnyGeometry | None](GeoJSONObject):
     type: Literal[GeoJSONObjectType.FEATURE]
-
-    # TODO: How does this parse to the correct type without a discriminator field? Is performance
-    # better with an explicit discriminator?
     geometry: GeometryT
 
-    # TODO: Accept pydantic models
+    # TODO: Accept pydantic models https://github.com/pydantic/pydantic/issues/8489
     properties: Mapping[str, Any] | None
     id: str | int | None = None
 

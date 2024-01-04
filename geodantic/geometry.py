@@ -1,7 +1,8 @@
 from abc import ABC
 from collections.abc import Sequence
-from typing import Literal
+from typing import Annotated, Literal
 
+import pydantic
 from pydantic.dataclasses import dataclass
 
 from geodantic.base import (
@@ -72,17 +73,21 @@ class GeometryCollection[
     | MultiPolygon
 ](Geometry):
     type: Literal[GeoJSONObjectType.GEOMETRY_COLLECTION]
+    geometries: Sequence[
+        Annotated[
+            GeometryT | "GeometryCollection",
+            pydantic.Field(discriminator="type"),
+        ]
+    ]
 
-    # TODO: Is there any way of defining a recursive generic class?
-    geometries: Sequence[GeometryT | "GeometryCollection"]
 
-
-type AnyGeometry = (
+type AnyGeometry = Annotated[
     Point
     | MultiPoint
     | LineString
     | MultiLineString
     | Polygon
     | MultiPolygon
-    | GeometryCollection
-)
+    | GeometryCollection,
+    pydantic.Field(discriminator="type"),
+]
