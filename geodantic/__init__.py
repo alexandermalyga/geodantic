@@ -1,30 +1,33 @@
-from .objects import (
+from .base import (
     BoundingBox,
     BoundingBox2D,
     BoundingBox3D,
-    Feature,
-    FeatureCollection,
     GeoJSONObject,
     GeoJSONObjectType,
-    Geometry,
-    GeometryCollection,
     Latitude,
     LinearRing,
-    LineString,
     LineStringCoordinates,
     Longitude,
-    MultiLineString,
-    MultiPoint,
-    MultiPolygon,
-    Point,
-    Polygon,
     PolygonCoordinates,
     Position,
     Position2D,
     Position3D,
 )
+from .feature import Feature, FeatureCollection
+from .geometry import (
+    AnyGeometry,
+    Geometry,
+    GeometryCollection,
+    LineString,
+    MultiLineString,
+    MultiPoint,
+    MultiPolygon,
+    Point,
+    Polygon,
+)
 
 __all__ = [
+    "AnyGeometry",
     "BoundingBox",
     "BoundingBox2D",
     "BoundingBox3D",
