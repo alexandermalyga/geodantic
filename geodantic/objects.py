@@ -4,25 +4,43 @@ from enum import StrEnum
 from typing import Annotated, Any, Literal
 
 import annotated_types as at
+import pydantic
 from pydantic.dataclasses import dataclass
 
 type Longitude = Annotated[float, at.Ge(-180), at.Le(180)]
 type Latitude = Annotated[float, at.Ge(-90), at.Le(90)]
-type Position = tuple[Longitude, Latitude] | tuple[Longitude, Latitude, float]
-type LineStringCoordinates = Annotated[Sequence[Position], at.MinLen(2)]
+
+type Position2D = tuple[Longitude, Latitude]
+type Position3D = tuple[Longitude, Latitude, float]
+type Position = Position2D | Position3D
+
 type BoundingBox2D = tuple[Longitude, Latitude, Longitude, Latitude]
 type BoundingBox3D = tuple[Longitude, Latitude, float, Longitude, Latitude, float]
+
+
+def _validate_bbox(bbox: BoundingBox2D | BoundingBox3D) -> bool:
+    first_position = (bbox[0], bbox[1])
+    second_position = (bbox[2], bbox[3]) if len(bbox) == 4 else (bbox[3], bbox[4])
+    return all(a <= b for a, b in zip(first_position, second_position))
+
+
 type BoundingBox = Annotated[
     BoundingBox2D | BoundingBox3D,
-    at.Predicate(
-        lambda b: (b[0], b[1]) <= ((b[2], b[3]) if len(b) == 4 else (b[3], b[4]))
-    ),
+    at.Predicate(_validate_bbox),
 ]
+
+
+def _validate_linear_ring(ring: Sequence[Position]) -> bool:
+    return ring[0] == ring[-1]
+
+
 type LinearRing = Annotated[
     Sequence[Position],
     at.MinLen(4),
-    at.Predicate(lambda r: r[0] == r[-1]),
+    at.Predicate(_validate_linear_ring),
 ]
+
+type LineStringCoordinates = Annotated[Sequence[Position], at.MinLen(2)]
 type PolygonCoordinates = Sequence[LinearRing]
 
 
@@ -42,7 +60,14 @@ class GeoJSONObjectType(StrEnum):
 class GeoJSONObject(ABC):
     type: GeoJSONObjectType
     bbox: BoundingBox | None = None
-    # TODO: https://datatracker.ietf.org/doc/html/rfc7946#section-6.1
+
+    @pydantic.field_validator("bbox")
+    @classmethod
+    def _bbox_is_not_none(cls, bbox: Any) -> Any:
+        # This validator will only run if the bbox was provided
+        if bbox is None:
+            raise ValueError("bbox cannot be None if present")
+        return bbox
 
 
 @dataclass(kw_only=True, slots=True)
