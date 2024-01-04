@@ -150,8 +150,8 @@ def test_parse_feature_with_invalid_properties() -> None:
         Feature(**data)
 
 
-@pytest.mark.parametrize("value", [1, "some-id", None])
-def test_parse_feature_with_id(value: str | int | None) -> None:
+@pytest.mark.parametrize("value", [1, "some-id"])
+def test_parse_feature_with_id(value: str | int) -> None:
     # given
     data = {
         "type": "Feature",
@@ -177,6 +177,20 @@ def test_parse_feature_with_invalid_id() -> None:
         "geometry": None,
         "properties": None,
         "id": [1, 2, 3],
+    }
+
+    with pytest.raises(pydantic.ValidationError):
+        # when
+        Feature(**data)
+
+
+def test_parse_feature_with_null_id() -> None:
+    # given
+    data = {
+        "type": "Feature",
+        "geometry": None,
+        "properties": None,
+        "id": None,
     }
 
     with pytest.raises(pydantic.ValidationError):
