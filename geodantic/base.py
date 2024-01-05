@@ -5,7 +5,6 @@ from typing import Annotated, Any
 
 import annotated_types as at
 import pydantic
-from pydantic.dataclasses import dataclass
 
 type Longitude = Annotated[float, at.Ge(-180), at.Le(180)]
 type Latitude = Annotated[float, at.Ge(-90), at.Le(90)]
@@ -56,8 +55,7 @@ class GeoJSONObjectType(StrEnum):
     FEATURE_COLLECTION = "FeatureCollection"
 
 
-@dataclass(frozen=True, kw_only=True, slots=True)
-class GeoJSONObject(ABC):
+class GeoJSONObject(pydantic.BaseModel, ABC):
     type: GeoJSONObjectType
     bbox: BoundingBox | None = None
 

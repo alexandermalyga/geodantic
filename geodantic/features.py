@@ -1,17 +1,18 @@
 from collections.abc import Mapping, Sequence
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 import pydantic
-from pydantic.dataclasses import dataclass
 
 from geodantic.base import GeoJSONObject, GeoJSONObjectType
 from geodantic.geometries import AnyGeometry
 
 
-@dataclass(frozen=True, kw_only=True, slots=True)
 class Feature[GeometryT: AnyGeometry | None](GeoJSONObject):
     type: Literal[GeoJSONObjectType.FEATURE]
-    geometry: GeometryT
+    geometry: Annotated[
+        GeometryT,
+        pydantic.Field(discriminator="type"),
+    ]
 
     # TODO: Accept pydantic models https://github.com/pydantic/pydantic/issues/8489
     properties: Mapping[str, Any] | None
@@ -26,7 +27,6 @@ class Feature[GeometryT: AnyGeometry | None](GeoJSONObject):
         return value
 
 
-@dataclass(frozen=True, kw_only=True, slots=True)
 class FeatureCollection(GeoJSONObject):
     type: Literal[GeoJSONObjectType.FEATURE_COLLECTION]
     features: Sequence[Feature]
