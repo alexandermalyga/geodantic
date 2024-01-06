@@ -95,6 +95,30 @@ def test_parse_feature_with_geometry(data: dict[str, Any], expected: Geometry) -
     assert feature.id is None
 
 
+def test_parse_feature_with_bounded_geometry() -> None:
+    # given
+    data = {
+        "type": "Feature",
+        "geometry": {"type": "Point", "coordinates": [1, 2]},
+        "properties": None,
+    }
+
+    # when
+    feature = Feature[Point, None](**data)
+
+    # then
+    assert feature.type is GeoJSONObjectType.FEATURE
+    assert feature.geometry == Point(
+        type=GeoJSONObjectType.POINT, coordinates=(1.0, 2.0)
+    )
+    assert feature.properties is None
+    assert feature.id is None
+
+    # Raises an exception when bounded to Polygon
+    with pytest.raises(pydantic.ValidationError):
+        Feature[Polygon, None](**data)
+
+
 def test_parse_feature_without_geometry() -> None:
     # given
     data = {
@@ -134,6 +158,67 @@ def test_parse_feature_with_mapping_properties() -> None:
     assert feature.type is GeoJSONObjectType.FEATURE
     assert feature.geometry is None
     assert feature.properties == {"some_key": 123}
+    assert feature.id is None
+
+
+def test_parse_feature_with_pydantic_model_properties() -> None:
+    # given
+    class SomeModel(pydantic.BaseModel):
+        some_key: int
+
+    data = {
+        "type": "Feature",
+        "geometry": None,
+        "properties": {"some_key": 123},
+    }
+
+    # when
+    feature = Feature[None, SomeModel](**data)
+
+    # then
+    assert feature.type is GeoJSONObjectType.FEATURE
+    assert feature.geometry is None
+    assert feature.properties == SomeModel(some_key=123)
+    assert feature.id is None
+
+
+def test_parse_feature_with_pydantic_dataclass_properties() -> None:
+    # given
+    @pydantic.dataclasses.dataclass
+    class SomeModel:
+        some_key: int
+
+    data = {
+        "type": "Feature",
+        "geometry": None,
+        "properties": {"some_key": 123},
+    }
+
+    # when
+    feature = Feature[None, SomeModel](**data)
+
+    # then
+    assert feature.type is GeoJSONObjectType.FEATURE
+    assert feature.geometry is None
+    assert feature.properties == SomeModel(some_key=123)
+    assert feature.id is None
+
+
+def test_parse_feature_with_null_properties() -> None:
+    # given
+    data = {
+        "type": "Feature",
+        "geometry": None,
+        "properties": None,
+    }
+
+    # when
+    feature = Feature[None, None](**data)
+
+    # then
+    assert feature.type is GeoJSONObjectType.FEATURE
+    assert feature.geometry is None
+    assert feature.properties is None
     assert feature.id is None
 
 

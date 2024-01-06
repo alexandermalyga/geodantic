@@ -1,3 +1,7 @@
+from typing import Annotated
+
+import pydantic
+
 from .base import (
     BoundingBox,
     BoundingBox2D,
@@ -26,7 +30,7 @@ from .geometries import (
     Polygon,
 )
 
-type AnyGeoJSONObject = (
+type AnyGeoJSONObject = Annotated[
     Point
     | MultiPoint
     | LineString
@@ -35,8 +39,9 @@ type AnyGeoJSONObject = (
     | MultiPolygon
     | GeometryCollection
     | Feature
-    | FeatureCollection
-)
+    | FeatureCollection,
+    pydantic.Field(discriminator="type"),
+]
 
 __all__ = [
     "AnyGeoJSONObject",
