@@ -4,6 +4,7 @@ import pydantic
 import pytest
 
 from geodantic import (
+    AnyGeometry,
     Feature,
     GeoJSONObjectType,
     Geometry,
@@ -173,7 +174,7 @@ def test_parse_feature_with_pydantic_model_properties() -> None:
     }
 
     # when
-    feature = Feature[None, SomeModel](**data)
+    feature = Feature[AnyGeometry | None, SomeModel](**data)
 
     # then
     assert feature.type is GeoJSONObjectType.FEATURE
@@ -195,7 +196,7 @@ def test_parse_feature_with_pydantic_dataclass_properties() -> None:
     }
 
     # when
-    feature = Feature[None, SomeModel](**data)
+    feature = Feature[AnyGeometry | None, SomeModel](**data)
 
     # then
     assert feature.type is GeoJSONObjectType.FEATURE
@@ -213,7 +214,7 @@ def test_parse_feature_with_null_properties() -> None:
     }
 
     # when
-    feature = Feature[None, None](**data)
+    feature = Feature[AnyGeometry | None, None](**data)
 
     # then
     assert feature.type is GeoJSONObjectType.FEATURE

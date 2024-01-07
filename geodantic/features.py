@@ -1,5 +1,5 @@
 from collections.abc import Mapping, Sequence
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
 import pydantic
 
@@ -12,7 +12,7 @@ class Feature[
     PropertiesT: Mapping[str, Any] | pydantic.BaseModel | None,
 ](GeoJSONObject):
     type: Literal[GeoJSONObjectType.FEATURE]
-    geometry: GeometryT
+    geometry: Annotated[GeometryT, pydantic.Field(discriminator="type")]
     properties: PropertiesT
     id: str | int | None = None
 

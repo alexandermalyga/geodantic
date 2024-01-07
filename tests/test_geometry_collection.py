@@ -1,3 +1,6 @@
+import pydantic
+import pytest
+
 from geodantic import (
     GeoJSONObjectType,
     GeometryCollection,
@@ -104,3 +107,36 @@ def test_parse_recursive_geometry_collection() -> None:
             geometries=[Point(type=GeoJSONObjectType.POINT, coordinates=(100.1, 80.2))],
         ),
     ]
+
+
+def test_parse_bounded_geometry_collection() -> None:
+    # given
+    data = {
+        "type": "GeometryCollection",
+        "geometries": [
+            {
+                "type": "Point",
+                "coordinates": [100.1, 80.2],
+            },
+        ],
+    }
+
+    # when
+    geometry_collection = GeometryCollection[Point](**data)
+
+    # then
+    assert geometry_collection.type is GeoJSONObjectType.GEOMETRY_COLLECTION
+    assert geometry_collection.geometries == [
+        Point(type=GeoJSONObjectType.POINT, coordinates=(100.1, 80.2)),
+    ]
+
+    with pytest.raises(pydantic.ValidationError):
+        GeometryCollection[Point](
+            type="GeometryCollection",
+            geometries=[
+                {
+                    "type": "LineString",
+                    "coordinates": [[1, 2], [3, 4]],
+                }
+            ],
+        )
