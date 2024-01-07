@@ -66,17 +66,11 @@ class GeometryCollection[GeometryT: "AnyGeometry"](Geometry):
 
 
 type AnyGeometry = (
-    Annotated[
-        Point
-        | MultiPoint
-        | LineString
-        | MultiLineString
-        | Polygon
-        | MultiPolygon
-        | GeometryCollection,
-        pydantic.Field(discriminator="type"),
-    ]
+    Point
+    | MultiPoint
+    | LineString
+    | MultiLineString
+    | Polygon
+    | MultiPolygon
+    | GeometryCollection
 )
-
-
-GeometryCollection.model_rebuild()

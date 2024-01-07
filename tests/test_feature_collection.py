@@ -1,3 +1,8 @@
+from typing import Any
+
+import pydantic
+import pytest
+
 from geodantic import (
     Feature,
     FeatureCollection,
@@ -98,3 +103,69 @@ def test_parse_feature_collection() -> None:
             properties=None,
         ),
     ]
+
+
+def test_parse_bounded_feature_collection() -> None:
+    # given
+    data = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "GeometryCollection",
+                    "geometries": [
+                        {
+                            "type": "Point",
+                            "coordinates": [100.1, 80.2],
+                        }
+                    ],
+                },
+                "properties": {"some_key": "some_value"},
+            },
+        ],
+    }
+
+    # when
+    feature_collection = FeatureCollection[GeometryCollection[Point], dict[str, Any]](
+        **data
+    )
+
+    # then
+    assert feature_collection.type is GeoJSONObjectType.FEATURE_COLLECTION
+    assert feature_collection.features == [
+        Feature(
+            type="Feature",
+            geometry=GeometryCollection(
+                type=GeoJSONObjectType.GEOMETRY_COLLECTION,
+                geometries=[
+                    Point(
+                        type=GeoJSONObjectType.POINT,
+                        coordinates=(100.1, 80.2),
+                    )
+                ],
+            ),
+            properties={"some_key": "some_value"},
+        ),
+    ]
+
+
+def test_parse_invalid_bounded_feature_collection() -> None:
+    # given
+    data = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [100.1, 80.2],
+                },
+                "properties": None,
+            },
+        ],
+    }
+
+    with pytest.raises(pydantic.ValidationError):
+        # when
+        FeatureCollection[GeometryCollection[Point], dict[str, Any]](**data)

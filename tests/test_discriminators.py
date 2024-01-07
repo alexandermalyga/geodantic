@@ -3,13 +3,20 @@ from typing import Any
 import pydantic
 import pytest
 
-from geodantic import Feature, FeatureCollection, GeoJSONObject, Point, Polygon
+from geodantic import (
+    AnyGeometry,
+    Feature,
+    FeatureCollection,
+    GeoJSONObject,
+    Point,
+    Polygon,
+)
 
-type SomeGeometry = Point | FeatureCollection | Polygon
+type SomeGeoJSON = Point | FeatureCollection | Polygon
 
 
 class SomeModel(pydantic.BaseModel):
-    some_field: SomeGeometry = pydantic.Field(discriminator="type")
+    some_field: SomeGeoJSON = pydantic.Field(discriminator="type")
 
 
 @pytest.mark.parametrize(
@@ -43,15 +50,15 @@ class SomeModel(pydantic.BaseModel):
                     },
                 ],
             },
-            FeatureCollection(
+            FeatureCollection[AnyGeometry | None, dict[str, Any] | None](
                 type="FeatureCollection",
                 features=[
-                    Feature(
+                    Feature[AnyGeometry | None, dict[str, Any] | None](
                         type="Feature",
                         geometry=Point(type="Point", coordinates=[1, 2]),
                         properties=None,
                     ),
-                    Feature(
+                    Feature[AnyGeometry | None, dict[str, Any] | None](
                         type="Feature",
                         geometry=Polygon(
                             type="Polygon",
@@ -59,7 +66,7 @@ class SomeModel(pydantic.BaseModel):
                         ),
                         properties={"some_key": "some_value"},
                     ),
-                    Feature(
+                    Feature[AnyGeometry | None, dict[str, Any] | None](
                         type="Feature",
                         geometry=None,
                         properties=None,

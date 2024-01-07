@@ -25,6 +25,9 @@ class Feature[
         return value
 
 
-class FeatureCollection(GeoJSONObject):
+class FeatureCollection[
+    GeometryT: AnyGeometry | None,
+    PropertiesT: Mapping[str, Any] | pydantic.BaseModel | None,
+](GeoJSONObject):
     type: Literal[GeoJSONObjectType.FEATURE_COLLECTION]
-    features: Sequence[Feature]
+    features: Sequence[Feature[GeometryT, PropertiesT]]
