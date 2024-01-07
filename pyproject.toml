@@ -10,7 +10,7 @@ repository = "https://github.com/alexandermalyga/geodantic"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-pydantic = "^2.5.3"
+pydantic = ">=2.5.3"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.8.0"
