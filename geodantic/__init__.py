@@ -15,7 +15,6 @@ from .base import (
 )
 from .features import Feature, FeatureCollection
 from .geometries import (
-    AnyGeometry,
     Geometry,
     GeometryCollection,
     LineString,
@@ -26,11 +25,7 @@ from .geometries import (
     Polygon,
 )
 
-type AnyGeoJSONObject = AnyGeometry | Feature | FeatureCollection
-
 __all__ = [
-    "AnyGeoJSONObject",
-    "AnyGeometry",
     "BoundingBox",
     "BoundingBox2D",
     "BoundingBox3D",

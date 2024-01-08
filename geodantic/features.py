@@ -4,11 +4,11 @@ from typing import Annotated, Any, Literal
 import pydantic
 
 from geodantic.base import GeoJSONObject, GeoJSONObjectType
-from geodantic.geometries import AnyGeometry
+from geodantic.geometries import Geometry
 
 
 class Feature[
-    GeometryT: AnyGeometry | None,
+    GeometryT: Geometry | None,
     PropertiesT: Mapping[str, Any] | pydantic.BaseModel | None,
 ](GeoJSONObject):
     type: Literal[GeoJSONObjectType.FEATURE]
@@ -26,7 +26,7 @@ class Feature[
 
 
 class FeatureCollection[
-    GeometryT: AnyGeometry | None,
+    GeometryT: Geometry | None,
     PropertiesT: Mapping[str, Any] | pydantic.BaseModel | None,
 ](GeoJSONObject):
     type: Literal[GeoJSONObjectType.FEATURE_COLLECTION]

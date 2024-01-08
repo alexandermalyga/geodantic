@@ -4,11 +4,11 @@ import pydantic
 import pytest
 
 from geodantic import (
-    AnyGeometry,
     Feature,
     FeatureCollection,
     GeoJSONObject,
     GeoJSONObjectType,
+    Geometry,
     Point,
     Polygon,
 )
@@ -51,17 +51,17 @@ class SomeModel(pydantic.BaseModel):
                     },
                 ],
             },
-            FeatureCollection[AnyGeometry | None, dict[str, Any] | None](
+            FeatureCollection[Geometry | None, dict[str, Any] | None](
                 type=GeoJSONObjectType.FEATURE_COLLECTION,
                 features=[
-                    Feature[AnyGeometry | None, dict[str, Any] | None](
+                    Feature[Geometry | None, dict[str, Any] | None](
                         type=GeoJSONObjectType.FEATURE,
                         geometry=Point(
                             type=GeoJSONObjectType.POINT, coordinates=[1, 2]
                         ),
                         properties=None,
                     ),
-                    Feature[AnyGeometry | None, dict[str, Any] | None](
+                    Feature[Geometry | None, dict[str, Any] | None](
                         type=GeoJSONObjectType.FEATURE,
                         geometry=Polygon(
                             type=GeoJSONObjectType.POLYGON,
@@ -69,7 +69,7 @@ class SomeModel(pydantic.BaseModel):
                         ),
                         properties={"some_key": "some_value"},
                     ),
-                    Feature[AnyGeometry | None, dict[str, Any] | None](
+                    Feature[Geometry | None, dict[str, Any] | None](
                         type=GeoJSONObjectType.FEATURE,
                         geometry=None,
                         properties=None,
