@@ -10,7 +10,7 @@ from geodantic.geometries import Geometry
 class Feature[
     GeometryT: Geometry | None,
     PropertiesT: Mapping[str, Any] | pydantic.BaseModel | None,
-](GeoJSONObject):
+](GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.FEATURE]
     geometry: Annotated[GeometryT, pydantic.Field(discriminator="type")]
     properties: PropertiesT
@@ -28,6 +28,6 @@ class Feature[
 class FeatureCollection[
     GeometryT: Geometry | None,
     PropertiesT: Mapping[str, Any] | pydantic.BaseModel | None,
-](GeoJSONObject):
+](GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.FEATURE_COLLECTION]
     features: Sequence[Feature[GeometryT, PropertiesT]]

@@ -12,37 +12,37 @@ from geodantic.base import (
 )
 
 
-class Point(GeoJSONObject):
+class Point(GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.POINT]
     coordinates: Position
 
 
-class MultiPoint(GeoJSONObject):
+class MultiPoint(GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.MULTI_POINT]
     coordinates: Sequence[Position]
 
 
-class LineString(GeoJSONObject):
+class LineString(GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.LINE_STRING]
     coordinates: LineStringCoordinates
 
 
-class MultiLineString(GeoJSONObject):
+class MultiLineString(GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.MULTI_LINE_STRING]
     coordinates: Sequence[LineStringCoordinates]
 
 
-class Polygon(GeoJSONObject):
+class Polygon(GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.POLYGON]
     coordinates: PolygonCoordinates
 
 
-class MultiPolygon(GeoJSONObject):
+class MultiPolygon(GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.MULTI_POLYGON]
     coordinates: Sequence[PolygonCoordinates]
 
 
-class GeometryCollection[GeometryT: "Geometry"](GeoJSONObject):
+class GeometryCollection[GeometryT: "Geometry"](GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.GEOMETRY_COLLECTION]
     geometries: Sequence[
         Annotated[

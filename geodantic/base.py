@@ -55,7 +55,7 @@ class GeoJSONObjectType(StrEnum):
     FEATURE_COLLECTION = "FeatureCollection"
 
 
-class GeoJSONObject(pydantic.BaseModel, ABC):
+class GeoJSONObject(pydantic.BaseModel, ABC, frozen=True):
     type: GeoJSONObjectType
     bbox: BoundingBox | None = None
 
