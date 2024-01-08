@@ -8,6 +8,7 @@ from geodantic import (
     Feature,
     FeatureCollection,
     GeoJSONObject,
+    GeoJSONObjectType,
     Point,
     Polygon,
 )
@@ -24,7 +25,7 @@ class SomeModel(pydantic.BaseModel):
     [
         (
             {"type": "Point", "coordinates": [1, 2]},
-            Point(type="Point", coordinates=[1, 2]),
+            Point(type=GeoJSONObjectType.POINT, coordinates=[1, 2]),
         ),
         (
             {
@@ -51,23 +52,25 @@ class SomeModel(pydantic.BaseModel):
                 ],
             },
             FeatureCollection[AnyGeometry | None, dict[str, Any] | None](
-                type="FeatureCollection",
+                type=GeoJSONObjectType.FEATURE_COLLECTION,
                 features=[
                     Feature[AnyGeometry | None, dict[str, Any] | None](
-                        type="Feature",
-                        geometry=Point(type="Point", coordinates=[1, 2]),
+                        type=GeoJSONObjectType.FEATURE,
+                        geometry=Point(
+                            type=GeoJSONObjectType.POINT, coordinates=[1, 2]
+                        ),
                         properties=None,
                     ),
                     Feature[AnyGeometry | None, dict[str, Any] | None](
-                        type="Feature",
+                        type=GeoJSONObjectType.FEATURE,
                         geometry=Polygon(
-                            type="Polygon",
+                            type=GeoJSONObjectType.POLYGON,
                             coordinates=[[[1, 2], [3, 4], [5, 6], [1, 2]]],
                         ),
                         properties={"some_key": "some_value"},
                     ),
                     Feature[AnyGeometry | None, dict[str, Any] | None](
-                        type="Feature",
+                        type=GeoJSONObjectType.FEATURE,
                         geometry=None,
                         properties=None,
                     ),

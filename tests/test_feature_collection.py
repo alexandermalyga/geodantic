@@ -74,12 +74,12 @@ def test_parse_feature_collection() -> None:
     assert feature_collection.type is GeoJSONObjectType.FEATURE_COLLECTION
     assert feature_collection.features == [
         Feature(
-            type="Feature",
-            geometry=Point(type="Point", coordinates=[1, 2]),
+            type=GeoJSONObjectType.FEATURE,
+            geometry=Point(type=GeoJSONObjectType.POINT, coordinates=[1, 2]),
             properties=None,
         ),
         Feature(
-            type="Feature",
+            type=GeoJSONObjectType.FEATURE,
             geometry=GeometryCollection(
                 type=GeoJSONObjectType.GEOMETRY_COLLECTION,
                 geometries=[
@@ -98,7 +98,7 @@ def test_parse_feature_collection() -> None:
             properties={"some_key": "some_value"},
         ),
         Feature(
-            type="Feature",
+            type=GeoJSONObjectType.FEATURE,
             geometry=None,
             properties=None,
         ),
@@ -135,7 +135,7 @@ def test_parse_bounded_feature_collection() -> None:
     assert feature_collection.type is GeoJSONObjectType.FEATURE_COLLECTION
     assert feature_collection.features == [
         Feature(
-            type="Feature",
+            type=GeoJSONObjectType.FEATURE,
             geometry=GeometryCollection(
                 type=GeoJSONObjectType.GEOMETRY_COLLECTION,
                 geometries=[

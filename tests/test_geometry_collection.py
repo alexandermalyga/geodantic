@@ -132,7 +132,7 @@ def test_parse_bounded_geometry_collection() -> None:
 
     with pytest.raises(pydantic.ValidationError):
         GeometryCollection[Point](
-            type="GeometryCollection",
+            type=GeoJSONObjectType.GEOMETRY_COLLECTION,
             geometries=[
                 {
                     "type": "LineString",

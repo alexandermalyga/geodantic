@@ -37,7 +37,7 @@ def test_parse_feature_with_null_geometry() -> None:
     [
         (
             {"type": "Point", "coordinates": [1, 2]},
-            Point(type="Point", coordinates=[1, 2]),
+            Point(type=GeoJSONObjectType.POINT, coordinates=[1, 2]),
         ),
         (
             {
@@ -45,7 +45,7 @@ def test_parse_feature_with_null_geometry() -> None:
                 "coordinates": [[[1, 2], [3, 4], [5, 6], [1, 2]]],
             },
             Polygon(
-                type="Polygon",
+                type=GeoJSONObjectType.POLYGON,
                 coordinates=[[[1, 2], [3, 4], [5, 6], [1, 2]]],
             ),
         ),
