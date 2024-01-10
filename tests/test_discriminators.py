@@ -6,7 +6,6 @@ import pytest
 from geodantic import (
     Feature,
     FeatureCollection,
-    GeoJSONObject,
     GeoJSONObjectType,
     Geometry,
     Point,
@@ -79,7 +78,7 @@ class SomeModel(pydantic.BaseModel):
         ),
     ],
 )
-def test_discriminators(data: dict[str, Any], expected: GeoJSONObject) -> None:
+def test_discriminators(data: dict[str, Any], expected: SomeGeoJSON) -> None:
     # when
     result = SomeModel(some_field=data)
 

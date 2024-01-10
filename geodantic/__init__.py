@@ -1,18 +1,3 @@
-from .base import (
-    BoundingBox,
-    BoundingBox2D,
-    BoundingBox3D,
-    GeoJSONObject,
-    GeoJSONObjectType,
-    Latitude,
-    LinearRing,
-    LineStringCoordinates,
-    Longitude,
-    PolygonCoordinates,
-    Position,
-    Position2D,
-    Position3D,
-)
 from .features import Feature, FeatureCollection
 from .geometries import (
     Geometry,
@@ -24,6 +9,20 @@ from .geometries import (
     Point,
     Polygon,
 )
+from .types import (
+    BoundingBox,
+    BoundingBox2D,
+    BoundingBox3D,
+    GeoJSONObjectType,
+    Latitude,
+    LinearRing,
+    LineStringCoordinates,
+    Longitude,
+    PolygonCoordinates,
+    Position,
+    Position2D,
+    Position3D,
+)
 
 __all__ = [
     "BoundingBox",
@@ -31,7 +30,6 @@ __all__ = [
     "BoundingBox3D",
     "Feature",
     "FeatureCollection",
-    "GeoJSONObject",
     "GeoJSONObjectType",
     "Geometry",
     "GeometryCollection",

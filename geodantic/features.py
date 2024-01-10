@@ -3,14 +3,15 @@ from typing import Annotated, Any, Literal
 
 import pydantic
 
-from geodantic.base import GeoJSONObject, GeoJSONObjectType
+from geodantic.base import _GeoJSONObject
 from geodantic.geometries import Geometry
+from geodantic.types import GeoJSONObjectType
 
 
 class Feature[
     GeometryT: Geometry | None,
     PropertiesT: Mapping[str, Any] | pydantic.BaseModel | None,
-](GeoJSONObject, frozen=True):
+](_GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.FEATURE]
     geometry: Annotated[GeometryT, pydantic.Field(discriminator="type")]
     properties: PropertiesT
@@ -28,6 +29,6 @@ class Feature[
 class FeatureCollection[
     GeometryT: Geometry | None,
     PropertiesT: Mapping[str, Any] | pydantic.BaseModel | None,
-](GeoJSONObject, frozen=True):
+](_GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.FEATURE_COLLECTION]
     features: Sequence[Feature[GeometryT, PropertiesT]]

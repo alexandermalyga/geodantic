@@ -3,8 +3,8 @@ from typing import Annotated, Literal
 
 import pydantic
 
-from geodantic.base import (
-    GeoJSONObject,
+from geodantic.base import _GeoJSONObject
+from geodantic.types import (
     GeoJSONObjectType,
     LineStringCoordinates,
     PolygonCoordinates,
@@ -12,37 +12,37 @@ from geodantic.base import (
 )
 
 
-class Point(GeoJSONObject, frozen=True):
+class Point(_GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.POINT]
     coordinates: Position
 
 
-class MultiPoint(GeoJSONObject, frozen=True):
+class MultiPoint(_GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.MULTI_POINT]
     coordinates: Sequence[Position]
 
 
-class LineString(GeoJSONObject, frozen=True):
+class LineString(_GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.LINE_STRING]
     coordinates: LineStringCoordinates
 
 
-class MultiLineString(GeoJSONObject, frozen=True):
+class MultiLineString(_GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.MULTI_LINE_STRING]
     coordinates: Sequence[LineStringCoordinates]
 
 
-class Polygon(GeoJSONObject, frozen=True):
+class Polygon(_GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.POLYGON]
     coordinates: PolygonCoordinates
 
 
-class MultiPolygon(GeoJSONObject, frozen=True):
+class MultiPolygon(_GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.MULTI_POLYGON]
     coordinates: Sequence[PolygonCoordinates]
 
 
-class GeometryCollection[GeometryT: "Geometry"](GeoJSONObject, frozen=True):
+class GeometryCollection[GeometryT: "Geometry"](_GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.GEOMETRY_COLLECTION]
     geometries: Sequence[
         Annotated[
