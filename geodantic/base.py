@@ -13,20 +13,21 @@ type Position2D = tuple[Longitude, Latitude]
 type Position3D = tuple[Longitude, Latitude, float]
 type Position = Position2D | Position3D
 
-type BoundingBox2D = tuple[Longitude, Latitude, Longitude, Latitude]
-type BoundingBox3D = tuple[Longitude, Latitude, float, Longitude, Latitude, float]
+
+def _validate_bbox(bbox: tuple[float, ...]) -> bool:
+    middle = len(bbox) // 2
+    return bbox[0] <= bbox[middle] and bbox[1] <= bbox[middle + 1]
 
 
-def _validate_bbox(bbox: BoundingBox2D | BoundingBox3D) -> bool:
-    first_position = (bbox[0], bbox[1])
-    second_position = (bbox[2], bbox[3]) if len(bbox) == 4 else (bbox[3], bbox[4])
-    return all(a <= b for a, b in zip(first_position, second_position))
-
-
-type BoundingBox = Annotated[
-    BoundingBox2D | BoundingBox3D,
+type BoundingBox2D = Annotated[
+    tuple[Longitude, Latitude, Longitude, Latitude],
     at.Predicate(_validate_bbox),
 ]
+type BoundingBox3D = Annotated[
+    tuple[Longitude, Latitude, float, Longitude, Latitude, float],
+    at.Predicate(_validate_bbox),
+]
+type BoundingBox = BoundingBox2D | BoundingBox3D
 
 
 def _validate_linear_ring(ring: Sequence[Position]) -> bool:
