@@ -127,9 +127,9 @@ def test_parse_bounded_feature_collection() -> None:
     }
 
     # when
-    feature_collection = FeatureCollection[GeometryCollection[Point], dict[str, Any]](
-        **data
-    )
+    feature_collection = FeatureCollection[
+        Feature[GeometryCollection[Point], dict[str, Any]]
+    ](**data)
 
     # then
     assert feature_collection.type is GeoJSONObjectType.FEATURE_COLLECTION
@@ -168,4 +168,4 @@ def test_parse_invalid_bounded_feature_collection() -> None:
 
     with pytest.raises(pydantic.ValidationError):
         # when
-        FeatureCollection[GeometryCollection[Point], dict[str, Any]](**data)
+        FeatureCollection[Feature[GeometryCollection[Point], dict[str, Any]]](**data)

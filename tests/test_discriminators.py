@@ -50,7 +50,7 @@ class SomeModel(pydantic.BaseModel):
                     },
                 ],
             },
-            FeatureCollection[Geometry | None, dict[str, Any] | None](
+            FeatureCollection[Feature](
                 type=GeoJSONObjectType.FEATURE_COLLECTION,
                 features=[
                     Feature[Geometry | None, dict[str, Any] | None](

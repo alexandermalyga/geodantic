@@ -27,8 +27,10 @@ class Feature[
 
 
 class FeatureCollection[
-    GeometryT: Geometry | None,
-    PropertiesT: Mapping[str, Any] | pydantic.BaseModel | None,
+    FeatureT: Feature[
+        Geometry | None,
+        Mapping[str, Any] | pydantic.BaseModel | None,
+    ]
 ](_GeoJSONObject, frozen=True):
     type: Literal[GeoJSONObjectType.FEATURE_COLLECTION]
-    features: Sequence[Feature[GeometryT, PropertiesT]]
+    features: Sequence[FeatureT]
